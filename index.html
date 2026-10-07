@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.webmanifest">
+<title>USDT Demo</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5f7;color:#111;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+main{max-width:680px;margin:auto;padding:24px 18px 40px}.card{background:#fff;border-radius:22px;padding:22px;box-shadow:0 8px 30px #00000012}
+.icon{width:68px;height:68px;border-radius:16px;background:#111827;display:grid;place-items:center;margin-bottom:14px}
+.icon span{color:#facc15;font-weight:900;font-size:24px}.badge{display:inline-block;background:#fff3cd;color:#8a6100;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700}
+h1{font-size:28px;margin:10px 0 6px}p{color:#666;line-height:1.45}label{display:block;font-weight:700;margin:18px 0 7px}
+input,textarea{width:100%;border:1px solid #ddd;border-radius:14px;padding:13px;font:inherit;background:#fafafa}textarea{min-height:135px;resize:vertical}
+button{width:100%;margin-top:20px;border:0;border-radius:15px;padding:15px;background:#111827;color:white;font-size:17px;font-weight:700}
+button:active{transform:scale(.99)}.hint{font-size:13px;margin-top:14px;color:#777}
+</style>
+</head>
+<body>
+<main>
+<div class="card">
+<div class="icon"><span>USDT</span></div>
+<span class="badge">DEMO</span>
+<h1>USDT Demo Notification</h1>
+<p>Ứng dụng thử nghiệm thông báo trên iPhone.</p>
+
+<label>Tiêu đề</label>
+<input id="title" value="Xử lý tiền gửi USDT">
+
+<label>Nội dung</label>
+<textarea id="body">Khoản tiền gửi 19,080 USDT của bạn hiện đang được xử lý. Nếu bạn không nhận ra hoạt động này, vui lòng liên hệ với chúng tôi ngay lập tức.</textarea>
+
+<button id="notify">🔔 Gửi thông báo DEMO</button>
+<div class="hint">Cài trang này vào Màn hình chính rồi bấm nút để cấp quyền thông báo.</div>
+</div>
+</main>
+<script>
+const btn=document.getElementById('notify');
+btn.onclick=async()=>{
+  if(!('Notification' in window)){alert('Trình duyệt này không hỗ trợ thông báo.');return;}
+  let p=Notification.permission;
+  if(p==='default') p=await Notification.requestPermission();
+  if(p!=='granted'){alert('Hãy cho phép Notifications trong cài đặt của iPhone.');return;}
+  if('serviceWorker' in navigator){
+    const reg=await navigator.serviceWorker.ready;
+    await reg.showNotification('DEMO • '+document.getElementById('title').value,{
+      body:document.getElementById('body').value,
+      tag:'usdt-demo',
+      icon:'icon.svg',
+      badge:'icon.svg'
+    });
+  }else{
+    new Notification('DEMO • '+document.getElementById('title').value,{body:document.getElementById('body').value});
+  }
+};
+</script>
+</body>
+</html>
